@@ -1,27 +1,26 @@
-/*global __dirname, require, module*/
+/* global __dirname, require, module */
 
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
-const env  = require('yargs').argv.env;
+const env = require('yargs').argv.env;
 
 const srcRoot = path.join(__dirname, '..', 'src');
 const nodeRoot = path.join(__dirname, '..', 'node_modules');
 const outputPath = path.join(__dirname, '..', 'dist');
 
-let plugins = [];
 let outputFile = 'milkdrop-preset-converter-node';
 
 if (env === 'prod') {
   outputFile += '.min';
 }
 
-let config = {
-  entry: srcRoot + '/index.js',
+const config = {
+  entry: `${srcRoot}/index.js`,
   target: 'node',
   output: {
     path: outputPath,
-    filename: outputFile + '.js',
+    filename: `${outputFile}.js`,
     library: 'milkdropPresetConverter',
     libraryTarget: 'umd'
   },
@@ -61,7 +60,7 @@ if (env === 'prod') {
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        NODE_ENV: JSON.stringify('production')
       }
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
