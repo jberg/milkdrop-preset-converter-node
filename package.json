@@ -1,6 +1,6 @@
 {
   "name": "milkdrop-preset-converter-node",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Convert Milkdrop presets to Butterchurn JSON format using Node",
   "author": "Jordan Berg <jordannealberg@gmail.com>",
   "license": "MIT",
