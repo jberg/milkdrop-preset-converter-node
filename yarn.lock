@@ -2829,20 +2829,20 @@ micromatch@^3.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.2"
 
-milkdrop-eel-parser@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/milkdrop-eel-parser/-/milkdrop-eel-parser-0.0.1.tgz#1c1a82bb7877d9df6d45e6f0b602b4cd1a5dc26d"
+milkdrop-eel-parser@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/milkdrop-eel-parser/-/milkdrop-eel-parser-0.0.4.tgz#274224f97b8954ff653b16d029e7e8c2806aea15"
 
-milkdrop-preset-utils@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/milkdrop-preset-utils/-/milkdrop-preset-utils-0.0.5.tgz#8febbb0ac61c9004f26d584f886e1ce835f39aef"
+milkdrop-preset-utils@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/milkdrop-preset-utils/-/milkdrop-preset-utils-0.1.0.tgz#2d61a1acf148dd80cd28ffc55db6925f853ad7d7"
   dependencies:
     babel-runtime "^6.26.0"
     lodash "^4.17.4"
 
-milkdrop-shader-converter@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/milkdrop-shader-converter/-/milkdrop-shader-converter-0.0.7.tgz#a4a15a062ed9463dac79bce9c94761e0721d7266"
+milkdrop-shader-converter@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/milkdrop-shader-converter/-/milkdrop-shader-converter-0.0.8.tgz#3ce609ac9c17d07a3394609b695951fb520c5a62"
   dependencies:
     cmake-js "^3.7.3"
     nan "^2.10.0"
