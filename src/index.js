@@ -1,10 +1,12 @@
+import tmp from 'tmp';
+import { writeFileSync, readFileSync } from 'fs';
+import { execFileSync } from 'child_process';
 import _ from 'lodash';
-import { convertHLSLString } from 'milkdrop-shader-converter';
 import milkdropParser from 'milkdrop-eel-parser';
 import {
   splitPreset,
-  prepareShader,
-  processOptimizedShader,
+  prepareShaderForDX11,
+  processDX11ConvertedShader,
   createBasePresetFuns
 } from 'milkdrop-preset-utils';
 import optimizeEquations from './optimize';
@@ -15,6 +17,11 @@ function processShader (shader) {
   }
 
   const processedShader = _.replace(shader, 'shader_body', 'xlat_main');
+  // processedShader = _.replace(processedShader, /sampler2D/g, 'Texture2D');
+  // processedShader = _.replace(processedShader, /sampler3D/g, 'Texture3D');
+  // processedShader = _.replace(processedShader, /tex2D/g, 'texture2d.Sample');
+  // processedShader = _.replace(processedShader, /tex3D/g, 'texture3d.Sample');
+
   return processedShader;
 }
 
@@ -44,11 +51,17 @@ function optimizePresetEquations (preset) {
   return presetMap;
 }
 
-export function convertPresetShader (shader) {
-  const processedShader = processShader(prepareShader(shader));
+function convertPresetShader (shader) {
+  const processedShader = processShader(prepareShaderForDX11(shader));
   if (!_.isEmpty(processedShader)) {
-    const convertedShader = convertHLSLString(processedShader) || '';
-    return convertedShader.toString();
+    const fileInput = tmp.fileSync();
+    const fileOutput = tmp.fileSync();
+    writeFileSync(fileInput.fd, processedShader);
+    execFileSync(`${process.cwd()}/ShaderConductorCmd`, [
+      '-E', 'xlat_main', '-I', fileInput.name, '-O', fileOutput.name, '-T', 'essl', '-S', 'ps', '-V', '300'
+    ]);
+    const convertedShader = readFileSync(fileOutput.fd).toString();
+    return convertedShader;
   }
 
   return '';
@@ -72,8 +85,8 @@ export function convertPresetMap (presetParts, optimize = true) {
   const compShader = convertPresetShader(presetParts.comp);
 
   const presetOutput = Object.assign({ baseVals: presetParts.baseVals }, presetMap, {
-    warp: processOptimizedShader(warpShader),
-    comp: processOptimizedShader(compShader),
+    warp: processDX11ConvertedShader(warpShader),
+    comp: processDX11ConvertedShader(compShader),
   });
 
   if ((_.isEmpty(presetOutput.warp) && !_.isEmpty(presetParts.warp)) ||
@@ -84,10 +97,11 @@ export function convertPresetMap (presetParts, optimize = true) {
   return presetOutput;
 }
 
-export function convertPreset (preset, optimize = true) {
+export function convertPreset (preset, presetName, optimize = false) {
   let mainPresetText = _.split(preset, '[preset00]')[1];
   mainPresetText = _.replace(mainPresetText, /\r\n/g, '\n');
   const presetParts = splitPreset(mainPresetText);
-
-  return convertPresetMap(presetParts, optimize);
+  const presetMap = convertPresetMap(presetParts, optimize);
+  presetMap.name = presetName;
+  return presetMap;
 }

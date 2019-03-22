@@ -13,6 +13,8 @@ if (args.length < 2) {
   process.exit(1);
 }
 
+// check for existence of `${process.cwd()}/ShaderConductorCmd`
+
 function convertPreset (item) {
   return new Promise((resolve, reject) => {
     const cp = fork('src/convertPreset.js', [args[0], args[1], item]);
