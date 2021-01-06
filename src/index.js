@@ -54,6 +54,35 @@ export function convertPresetShader (shader) {
   return '';
 }
 
+export function convertShaders (presetParts) {
+  const presetMap = { baseVals: presetParts.baseVals, shapes: [], waves: [] };
+
+  // rename property to eel_str
+  presetMap.init_eqs_eel_str = presetParts.presetInit ? presetParts.presetInit.trim() : '';
+  presetMap.frame_eqs_eel_str = presetParts.perFrame ? presetParts.perFrame.trim() : '';
+  presetMap.pixel_eqs_eel_str = presetParts.perVertex ? presetParts.perVertex.trim() : '';
+
+  for (let i = 0; i < presetParts.shapes.length; i++) {
+    presetMap.shapes.push(_.assign({ baseVals: presetParts.shapes[i].baseVals }, {
+      init_eqs_eel_str: presetParts.shapes[i].init_eqs_str ? presetParts.shapes[i].init_eqs_str : '',
+      frame_eqs_eel_str: presetParts.shapes[i].frame_eqs_str ? presetParts.shapes[i].frame_eqs_str : '',
+    }));
+  }
+
+  for (let i = 0; i < presetParts.waves.length; i++) {
+    presetMap.waves.push(_.assign({ baseVals: presetParts.waves[i].baseVals }, {
+      init_eqs_eel_str: presetParts.waves[i].init_eqs_str ? presetParts.waves[i].init_eqs_str : '',
+      frame_eqs_eel_str: presetParts.waves[i].frame_eqs_str ? presetParts.waves[i].frame_eqs_str : '',
+      point_eqs_eel_str: presetParts.waves[i].point_eqs_str ? presetParts.waves[i].point_eqs_str : '',
+    }));
+  }
+
+  presetMap.warp = processOptimizedShader(convertPresetShader(presetParts.warp));
+  presetMap.comp = processOptimizedShader(convertPresetShader(presetParts.comp));
+
+  return presetMap;
+}
+
 export function convertPresetMap (presetParts, optimize = true) {
   const parsedPreset = milkdropParser.convert_preset_wave_and_shape(presetParts.presetVersion,
                                                                     presetParts.presetInit,
@@ -67,6 +96,27 @@ export function convertPresetMap (presetParts, optimize = true) {
   if (optimize) {
     presetMap = optimizePresetEquations(presetMap);
   }
+
+  /* eslint-disable max-len */
+  presetMap.init_eqs_eel = presetParts.presetInit ? presetParts.presetInit.trim() : '';
+  presetMap.frame_eqs_eel = presetParts.perFrame ? presetParts.perFrame.trim() : '';
+  presetMap.pixel_eqs_eel = presetParts.perVertex ? presetParts.perVertex.trim() : '';
+
+  for (let i = 0; i < presetParts.shapes.length; i++) {
+    if (presetParts.shapes[i]) {
+      presetMap.shapes[i].init_eqs_eel = presetParts.shapes[i].init_eqs_str ? presetParts.shapes[i].init_eqs_str : '';
+      presetMap.shapes[i].frame_eqs_eel = presetParts.shapes[i].frame_eqs_str ? presetParts.shapes[i].frame_eqs_str : '';
+    }
+  }
+
+  for (let i = 0; i < presetParts.waves.length; i++) {
+    if (presetParts.waves[i]) {
+      presetMap.waves[i].init_eqs_eel = presetParts.waves[i].init_eqs_str ? presetParts.waves[i].init_eqs_str : '';
+      presetMap.waves[i].frame_eqs_eel = presetParts.waves[i].frame_eqs_str ? presetParts.waves[i].frame_eqs_str : '';
+      presetMap.waves[i].point_eqs_eel = presetParts.waves[i].point_eqs_str ? presetParts.waves[i].point_eqs_str : '';
+    }
+  }
+  /* eslint-enable max-len */
 
   const warpShader = convertPresetShader(presetParts.warp);
   const compShader = convertPresetShader(presetParts.comp);
@@ -84,10 +134,14 @@ export function convertPresetMap (presetParts, optimize = true) {
   return presetOutput;
 }
 
-export function convertPreset (preset, optimize = true) {
+export function convertPreset (preset, optimize = true, shadersOnly = false) {
   let mainPresetText = _.split(preset, '[preset00]')[1];
   mainPresetText = _.replace(mainPresetText, /\r\n/g, '\n');
   const presetParts = splitPreset(mainPresetText);
+
+  if (shadersOnly) {
+    return convertShaders(presetParts);
+  }
 
   return convertPresetMap(presetParts, optimize);
 }

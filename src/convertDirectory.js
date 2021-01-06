@@ -8,14 +8,21 @@ const { filter, mergeMap } = rxjs.operators;
 const args = process.argv.slice(2);
 if (args.length < 2) {
   console.log(
-    'not enough arguments: yarn run convert preset-directory output-directory presets-in-parallel'
+    'not enough arguments: yarn run convert preset-directory output-directory presets-in-parallel shaders-only'
   );
   process.exit(1);
 }
 
+let optimize = true;
+let shadersOnly = false;
+if (args.length > 3) {
+  optimize = (args[3] === 'true');
+  shadersOnly = (args[4] === 'true');
+}
+
 function convertPreset (item) {
   return new Promise((resolve, reject) => {
-    const cp = fork('src/convertPreset.js', [args[0], args[1], item]);
+    const cp = fork('src/convertPreset.js', [args[0], args[1], item, optimize, shadersOnly]);
     cp.on('error', reject)
       .on('close', (code) => {
         if (code === 0) {
