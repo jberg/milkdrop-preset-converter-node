@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import { compile } from 'google-closure-compiler-js';
+import _ from "lodash";
+import { compile } from "google-closure-compiler-js";
 
 const externs = `
   function rand(x){};
@@ -23,7 +23,7 @@ const externs = `
   function ifcond(x,y,z){};
 `;
 
-function makeEqsString (eqsStr) {
+function makeEqsString(eqsStr) {
   return `
     function run(a) {
       ${eqsStr}
@@ -34,23 +34,25 @@ function makeEqsString (eqsStr) {
     window['run'] = run;`;
 }
 
-export default function optimizeEquations (eqsStr) {
+export default function optimizeEquations(eqsStr) {
   if (!_.isEmpty(eqsStr)) {
     const closureOutput = compile({
       jsCode: [{ src: makeEqsString(eqsStr) }],
       externs: [{ src: externs }],
-      compilationLevel: 'ADVANCED',
+      compilationLevel: "ADVANCED",
     });
 
     const outputSrc = closureOutput.compiledCode;
 
-    if (!_.isEmpty(outputSrc) &&
-        _.startsWith(outputSrc, 'window.run=function(a){') &&
-        _.endsWith(outputSrc, 'return a};')) {
+    if (
+      !_.isEmpty(outputSrc) &&
+      _.startsWith(outputSrc, "window.run=function(a){") &&
+      _.endsWith(outputSrc, "return a};")
+    ) {
       return outputSrc.substring(23, outputSrc.length - 10);
     }
 
-    console.log('failed to properly compile:');
+    console.log("failed to properly compile:");
     console.log(eqsStr);
     console.log(closureOutput);
   }
