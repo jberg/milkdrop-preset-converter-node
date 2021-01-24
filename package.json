@@ -23,7 +23,7 @@
     "google-closure-compiler-js": "^20180506.0.0",
     "lodash": "^4.17.20",
     "milkdrop-eel-parser": "^0.0.4",
-    "milkdrop-preset-utils": "^0.2.0",
+    "milkdrop-preset-utils": "^0.2.1",
     "milkdrop-shader-converter": "^0.0.8",
     "nan": "^2.8.0"
   },

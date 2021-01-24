@@ -3384,10 +3384,10 @@ milkdrop-eel-parser@^0.0.4:
   resolved "https://registry.yarnpkg.com/milkdrop-eel-parser/-/milkdrop-eel-parser-0.0.4.tgz#274224f97b8954ff653b16d029e7e8c2806aea15"
   integrity sha512-4PsOdTMDB7GM3UFzqXQQXf8MBeoolOhsBLMlhug+IIMZ+yNkvqLbdqDbrueGZc8P8tLRJP8pbAxna1yjFr06HQ==
 
-milkdrop-preset-utils@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/milkdrop-preset-utils/-/milkdrop-preset-utils-0.2.0.tgz#c24dbcb2f2782d6cf08b8ea3f5c3c1ec2e105d04"
-  integrity sha512-g7FCY2y8j/sSKU/Ibgbg3qSk9ETPoZ7fO9HBkOCtVDWsRiDoEZOCK3Z1w8CTNPt2JzAnM1YCEnObZL1dNgK0mw==
+milkdrop-preset-utils@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/milkdrop-preset-utils/-/milkdrop-preset-utils-0.2.1.tgz#8feab0a040e1a75b86967395b18fdeb9c1087c66"
+  integrity sha512-43HeZ5iQ5EsSh1P4sHCi+MYAshOmlnpKvGRW66g6Sa2XEpAoHWyX9qyrLs/OVSZCtQy+vQ86S0S57b243VTByw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     lodash "^4.17.20"
