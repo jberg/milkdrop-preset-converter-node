@@ -188,7 +188,7 @@ export function convertPresetMap(presetParts, optimize = true) {
   const compShader = convertPresetShader(presetParts.comp);
 
   const presetOutput = Object.assign(
-    { baseVals: presetParts.baseVals },
+    { version: presetParts.presetVersion, baseVals: presetParts.baseVals },
     presetMap,
     {
       warp: processOptimizedShader(warpShader),
@@ -207,9 +207,7 @@ export function convertPresetMap(presetParts, optimize = true) {
 }
 
 export function convertPreset(preset, optimize = true, shadersOnly = false) {
-  let mainPresetText = _.split(preset, "[preset00]")[1];
-  mainPresetText = _.replace(mainPresetText, /\r\n/g, "\n");
-  const presetParts = splitPreset(mainPresetText);
+  const presetParts = splitPreset(preset);
 
   if (shadersOnly) {
     return convertShaders(presetParts);
