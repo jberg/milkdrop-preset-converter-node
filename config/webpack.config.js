@@ -1,7 +1,5 @@
 /* global __dirname, require, module */
 
-const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const path = require("path");
 const env = require("yargs").argv.env;
 
@@ -17,12 +15,14 @@ if (env === "prod") {
 
 const config = {
   entry: `${srcRoot}/index.js`,
+  mode: "development",
   target: "node",
   output: {
     path: outputPath,
     filename: `${outputFile}.js`,
     library: "milkdropPresetConverter",
     libraryTarget: "umd",
+    globalObject: "this",
   },
   module: {
     rules: [
@@ -30,7 +30,12 @@ const config = {
         test: /(\.js)$/,
         exclude: /node_modules|lib/,
         use: {
-          loader: "babel-loader?cacheDirectory",
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-runtime"],
+            sourceType: "unambiguous",
+          },
         },
       },
       {
@@ -55,18 +60,7 @@ const config = {
 };
 
 if (env === "prod") {
-  config.plugins.push(
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify("production"),
-      },
-    }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-
-    new UglifyJsPlugin({ parallel: true })
-  );
+  config.mode = "production";
 }
 
 module.exports = config;
