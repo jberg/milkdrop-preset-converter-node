@@ -193,6 +193,10 @@ export function convertPresetMap(presetParts, optimize = true) {
     {
       warp: processOptimizedShader(warpShader),
       comp: processOptimizedShader(compShader),
+    },
+    {
+      warp_hlsl: presetParts.warp,
+      comp_hlsl: presetParts.comp,
     }
   );
 
